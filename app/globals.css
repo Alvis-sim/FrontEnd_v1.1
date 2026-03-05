@@ -272,15 +272,15 @@ body {
 }
 
 .nav_logo_lottie {
-  height: 16px;
+  height: 24px;
   display: inline-flex;
   align-items: center;
 }
 
 .nav_logo_lottie svg {
   display: block;
-  width: 143px;
-  height: 16px;
+  width: 214.5px;
+  height: 24px;
 }
 
 .nav_logo_wordmark {
@@ -959,7 +959,7 @@ antigravity-logo {
 }
 
 .logo {
-  height: 28px;
+  height: 24px;
 }
 
 .antigravity-logo-image {
@@ -973,10 +973,12 @@ antigravity-logo {
   display: inline-flex;
   align-items: center;
   height: 100%;
-  font-size: 28px;
+  font-family: "Avenir Next", "Helvetica Neue", "Segoe UI", Arial, sans-serif;
+  font-size: 22.8px;
   line-height: 1;
-  letter-spacing: -0.2px;
-  font-weight: 450;
+  letter-spacing: 1.72px;
+  font-weight: 700;
+  text-transform: uppercase;
 }
 
 .header-container {
@@ -1179,7 +1181,7 @@ antigravity-logo {
   }
 
   .hero-brand-word {
-    font-size: 24px;
+    font-size: 22.8px;
   }
 }
 
