@@ -14,7 +14,7 @@ const AGENFIC_WORDMARK_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0
   <text x="3" y="12.1" fill="#181818" font-family="'Avenir Next', 'Helvetica Neue', 'Segoe UI', Arial, sans-serif" font-size="15.2" font-weight="700" letter-spacing="1.15">${AGENFIC_WORDMARK_TEXT}</text>
 </svg>`;
 
-const AGENFIC_BANNER_IFRAME_SRCDOC = `<!doctype html>
+export const AGENFIC_BANNER_IFRAME_SRCDOC = `<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
