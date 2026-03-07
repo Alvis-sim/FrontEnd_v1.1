@@ -6,7 +6,7 @@ import { createAgenficParticles } from "./agenfic-particles-scene";
 
 const HEADING = "Autonomous Agents for Real Work";
 const HEADING_BREAK_BEFORE = "Real Work";
-const AGENFIC_WORDMARK_TEXT = "AGENF\\C";
+const AGENFIC_WORDMARK_TEXT = "AGENFIC";
 const AGENFIC_NAV_CSS_URL =
   "https://cdn.prod.website-files.com/67ce28cfec624e2b733f8a52/css/ant-brand.shared.ac3f37dad.min.css";
 
@@ -163,6 +163,135 @@ const AGENFIC_BANNER_IFRAME_SRCDOC = `<!doctype html>
         const logo = document.querySelector(".nav_logo_lottie");
         if (logo) {
           logo.innerHTML = ${JSON.stringify(AGENFIC_WORDMARK_SVG)};
+        }
+
+        const desktopNavList = document.querySelector(".nav_links_wrap.w-list-unstyled.is-desktop");
+        if (desktopNavList) {
+          const navItems = Array.from(desktopNavList.querySelectorAll(":scope > .nav_links_item.is-desktop"));
+          const preservedItems = navItems.filter((item) => item.querySelector(".nav_btn_combo_wrap"));
+          const dropdownTemplate =
+            navItems
+              .map((item) => item.querySelector(".nav_dropdown_component.w-dropdown"))
+              .find((dropdown) => {
+                const label = dropdown?.querySelector(".nav_links_text.is-desktop")?.textContent?.trim();
+                return label === "Commitments";
+              }) ??
+            navItems.map((item) => item.querySelector(".nav_dropdown_component.w-dropdown")).find(Boolean);
+
+          if (dropdownTemplate) {
+            navItems.forEach((item) => item.remove());
+            ["Products", "Services", "About Us"].forEach((label) => {
+              const item = document.createElement("li");
+              item.className = "nav_links_item is-desktop";
+              const dropdown = dropdownTemplate.cloneNode(true);
+              if (!(dropdown instanceof HTMLElement)) {
+                return;
+              }
+              dropdown.classList.remove("w--open", "open");
+
+              const toggle = dropdown.querySelector(".w-dropdown-toggle");
+              if (toggle) {
+                toggle.classList.remove("w--open");
+                toggle.setAttribute("aria-expanded", "false");
+                const text = toggle.querySelector(".nav_links_text.is-desktop");
+                if (text) {
+                  text.textContent = label;
+                }
+              }
+
+              const panel = dropdown.querySelector(".w-dropdown-list");
+              if (panel) {
+                panel.classList.remove("w--open", "open");
+                if (label === "Products") {
+                  const sectionHeading = panel.querySelector(
+                    ".nav_dropdown_main_scroll .u-detail-s.u-weight-medium.u-mb-text.u-color-faded"
+                  );
+                  if (sectionHeading) {
+                    sectionHeading.textContent = "Apps";
+                  }
+                  const firstItemText = panel.querySelector(".nav_dropdown_list .nav_dropdown_item .nav_dropdown_text");
+                  if (firstItemText) {
+                    firstItemText.textContent = "Betroth";
+                  }
+                  const dropdownTexts = panel.querySelectorAll(".nav_dropdown_list .nav_dropdown_item .nav_dropdown_text");
+                  const secondItemText = dropdownTexts[1];
+                  if (secondItemText) {
+                    secondItemText.textContent = "Energy Dashboard";
+                  }
+                  const thirdItemText = dropdownTexts[2];
+                  if (thirdItemText) {
+                    thirdItemText.textContent = "Machine Efficiency";
+                  }
+                } else if (label === "Services") {
+                  const sectionHeadings = panel.querySelectorAll(
+                    ".nav_dropdown_main_scroll .u-detail-s.u-weight-medium.u-mb-text.u-color-faded"
+                  );
+                  const primaryHeading = sectionHeadings[0];
+                  if (primaryHeading) {
+                    primaryHeading.textContent = "AI";
+                  }
+                  const secondaryHeading = sectionHeadings[1];
+                  if (secondaryHeading) {
+                    secondaryHeading.textContent = "Production";
+                  }
+
+                  const dropdownTexts = panel.querySelectorAll(".nav_dropdown_list .nav_dropdown_item .nav_dropdown_text");
+                  const firstItemText = dropdownTexts[0];
+                  if (firstItemText) {
+                    firstItemText.textContent = "Agent Implementation";
+                  }
+                  const secondItemText = dropdownTexts[1];
+                  if (secondItemText) {
+                    secondItemText.textContent = "Automations";
+                  }
+                  const thirdItemText = dropdownTexts[2];
+                  if (thirdItemText) {
+                    thirdItemText.textContent = "Web applications";
+                  }
+                  const fourthItemText = dropdownTexts[3];
+                  if (fourthItemText) {
+                    fourthItemText.textContent = "Production Monitoring";
+                  }
+
+                  const dropdownLists = panel.querySelectorAll(".nav_dropdown_list");
+                  const applicationsList = dropdownLists[1];
+                  if (applicationsList) {
+                    ["Predictive Maintenance", "Process Optimization"].forEach((textValue) => {
+                      const listItem = document.createElement("li");
+                      listItem.className = "nav_dropdown_item";
+                      const link = document.createElement("a");
+                      link.className = "nav_dropdown_link w-inline-block is-desktop";
+                      link.href = "#";
+                      const text = document.createElement("div");
+                      text.className = "nav_dropdown_text";
+                      text.textContent = textValue;
+                      link.appendChild(text);
+                      listItem.appendChild(link);
+                      applicationsList.appendChild(listItem);
+                    });
+                  }
+                }
+              }
+
+              item.appendChild(dropdown);
+              desktopNavList.appendChild(item);
+            });
+            preservedItems.forEach((item) => desktopNavList.appendChild(item));
+
+            const tryAgenficSectionHeadings = desktopNavList.querySelectorAll(
+              ".nav_btn_combo_wrap .nav_dropdown_main_scroll .u-detail-s.u-weight-medium.u-mb-text.u-color-faded"
+            );
+            tryAgenficSectionHeadings.forEach((heading) => {
+              const value = heading.textContent?.trim();
+              if (value === "Products") {
+                heading.textContent = "Support";
+              } else if (value === "Models") {
+                heading.textContent = "Products";
+              } else if (value === "Log in") {
+                heading.textContent = "Services";
+              }
+            });
+          }
         }
 
         const dropdowns = Array.from(document.querySelectorAll(".nav_dropdown_component.w-dropdown"));
