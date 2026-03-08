@@ -387,7 +387,15 @@ export const AGENFIC_BANNER_IFRAME_SRCDOC = `<!doctype html>
               link.querySelector(".nav_dropdown_text")?.textContent?.trim() ??
               link.textContent?.trim() ??
               "";
-            const nextHref = PRODUCT_ROUTE_OVERRIDES.get(label) ?? CONSTRUCTING_ROUTE;
+            const navItem = link.closest(".nav_links_item.is-desktop");
+            const navLabel =
+              navItem
+                ?.querySelector(".w-dropdown-toggle .nav_links_text.is-desktop")
+                ?.textContent?.trim() ?? "";
+            const useProductOverride = navLabel === "Products" && PRODUCT_ROUTE_OVERRIDES.has(label);
+            const nextHref = useProductOverride
+              ? (PRODUCT_ROUTE_OVERRIDES.get(label) ?? CONSTRUCTING_ROUTE)
+              : CONSTRUCTING_ROUTE;
             link.setAttribute("href", nextHref);
             link.setAttribute("target", "_top");
           });
@@ -408,9 +416,22 @@ export const AGENFIC_BANNER_IFRAME_SRCDOC = `<!doctype html>
 
           if (dropdownTemplate) {
             navItems.forEach((item) => item.remove());
-            ["Products", "Services", "About Us"].forEach((label) => {
+            ["Products", "Services", "Pricing", "About Us"].forEach((label) => {
               const item = document.createElement("li");
               item.className = "nav_links_item is-desktop";
+              if (label === "Pricing") {
+                const pricingLink = document.createElement("a");
+                pricingLink.className = "nav_links_link is-desktop w-inline-block";
+                pricingLink.href = CONSTRUCTING_ROUTE;
+                pricingLink.setAttribute("target", "_top");
+                const text = document.createElement("div");
+                text.className = "nav_links_text is-desktop";
+                text.textContent = label;
+                pricingLink.appendChild(text);
+                item.appendChild(pricingLink);
+                desktopNavList.appendChild(item);
+                return;
+              }
               const dropdown = dropdownTemplate.cloneNode(true);
               if (!(dropdown instanceof HTMLElement)) {
                 return;
@@ -450,6 +471,8 @@ export const AGENFIC_BANNER_IFRAME_SRCDOC = `<!doctype html>
                   if (thirdItemText) {
                     thirdItemText.textContent = "Machine Efficiency";
                   }
+                  const trustCenterBlocks = panel.querySelectorAll(".nav_dropdown_link_block");
+                  trustCenterBlocks.forEach((block) => block.remove());
                 } else if (label === "Services") {
                   const sectionHeadings = panel.querySelectorAll(
                     ".nav_dropdown_main_scroll .u-detail-s.u-weight-medium.u-mb-text.u-color-faded"
@@ -517,6 +540,34 @@ export const AGENFIC_BANNER_IFRAME_SRCDOC = `<!doctype html>
                 heading.textContent = "Products";
               } else if (value === "Log in") {
                 heading.textContent = "Services";
+              }
+            });
+
+            const comboRenameMap = new Map([
+              ["Opus", "Betroth"],
+              ["Sonnet", "Energy Dashboard"],
+              ["Haiku", "Machine Efficiency"],
+              ["Agenfic.ai", "Artificial Intelligence"],
+              ["Agenfic Console", "Production"]
+            ]);
+            const comboRemoveLabels = new Set(["Agenfic Code", "Agenfic Developer Platform", "Pricing"]);
+            const comboItems = desktopNavList.querySelectorAll(".nav_btn_combo_wrap .nav_dropdown_item");
+            comboItems.forEach((item) => {
+              if (!(item instanceof HTMLElement)) {
+                return;
+              }
+              const textElement = item.querySelector(".nav_dropdown_text");
+              const label = textElement?.textContent?.trim();
+              if (!label) {
+                return;
+              }
+              if (comboRemoveLabels.has(label)) {
+                item.remove();
+                return;
+              }
+              const nextLabel = comboRenameMap.get(label);
+              if (nextLabel && textElement) {
+                textElement.textContent = nextLabel;
               }
             });
           }
@@ -823,8 +874,13 @@ export default function AgenficHero() {
   const mainParticlesContainerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const lastScrollYRef = useRef(0);
+  const [bannerMounted, setBannerMounted] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [navVisible, setNavVisible] = useState(true);
+
+  useEffect(() => {
+    setBannerMounted(true);
+  }, []);
 
   useEffect(() => {
     const typedEl = typedContentRef.current;
@@ -973,12 +1029,14 @@ export default function AgenficHero() {
       <section className="welcome-wrapper">
         <header className={["header", isScrolled ? "scrolled" : "", !navVisible ? "hidden" : ""].filter(Boolean).join(" ")}>
           <div className="agenfic-banner-frame-wrap">
-            <iframe
-              title="Agenfic Banner"
-              className="agenfic-banner-frame"
-              srcDoc={AGENFIC_BANNER_IFRAME_SRCDOC}
-              scrolling="no"
-            />
+            {bannerMounted ? (
+              <iframe
+                title="Agenfic Banner"
+                className="agenfic-banner-frame"
+                srcDoc={AGENFIC_BANNER_IFRAME_SRCDOC}
+                scrolling="no"
+              />
+            ) : null}
           </div>
         </header>
 
