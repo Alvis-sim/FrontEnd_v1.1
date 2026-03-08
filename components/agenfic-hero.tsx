@@ -371,6 +371,28 @@ export const AGENFIC_BANNER_IFRAME_SRCDOC = `<!doctype html>
         }
         normalizeAnchorTargets();
 
+        const CONSTRUCTING_ROUTE = "/constructing";
+        const PRODUCT_ROUTE_OVERRIDES = new Map([
+          ["Energy Dashboard", "/energy-dashboard"],
+          ["Machine Efficiency", "/machine-efficiency"]
+        ]);
+
+        const applyDropdownLinkRoutes = (scope = document) => {
+          const links = Array.from(scope.querySelectorAll(".nav_dropdown_component .nav_dropdown_link[href]"));
+          links.forEach((link) => {
+            if (!(link instanceof HTMLAnchorElement)) {
+              return;
+            }
+            const label =
+              link.querySelector(".nav_dropdown_text")?.textContent?.trim() ??
+              link.textContent?.trim() ??
+              "";
+            const nextHref = PRODUCT_ROUTE_OVERRIDES.get(label) ?? CONSTRUCTING_ROUTE;
+            link.setAttribute("href", nextHref);
+            link.setAttribute("target", "_top");
+          });
+        };
+
         const desktopNavList = document.querySelector(".nav_links_wrap.w-list-unstyled.is-desktop");
         if (desktopNavList) {
           const navItems = Array.from(desktopNavList.querySelectorAll(":scope > .nav_links_item.is-desktop"));
@@ -499,6 +521,8 @@ export const AGENFIC_BANNER_IFRAME_SRCDOC = `<!doctype html>
             });
           }
         }
+
+        applyDropdownLinkRoutes();
 
         const navRoot = document.querySelector(".nav_wrap");
         const navActionsWrap = document.querySelector(".nav_actions_wrap");

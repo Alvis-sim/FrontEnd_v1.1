@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useMemo, useState, type MouseEvent } from "react";
 
 type Source = "solar" | "wind" | "water";
@@ -561,6 +562,35 @@ export default function EnergyDashboard() {
       <section className="dashboard">
         <header className="dashboard-header">
           <div>
+            <Link
+              className="nav_logo_wrap w-inline-block dashboard-home-logo"
+              href="/"
+              aria-label="Home page"
+              target="_top"
+            >
+              <div className="nav_logo_lottie">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 143 16"
+                  width="143"
+                  height="16"
+                  preserveAspectRatio="xMidYMid meet"
+                  aria-hidden="true"
+                >
+                  <text
+                    x="3"
+                    y="12.1"
+                    fill="#181818"
+                    fontFamily="'Avenir Next', 'Helvetica Neue', 'Segoe UI', Arial, sans-serif"
+                    fontSize="15.2"
+                    fontWeight="700"
+                    letterSpacing="1.15"
+                  >
+                    AGENFIC
+                  </text>
+                </svg>
+              </div>
+            </Link>
             <p className="eyebrow">Hybrid Renewable Plant</p>
             <h1>Machine Feed Simulator</h1>
             <p className="description">
